@@ -1,6 +1,10 @@
 package com.pulsar.service;
 
 import com.pulsar.Catalog;
+import com.pulsar.exception.InvalidLibraryItemException;
+import com.pulsar.model.Book;
+import com.pulsar.model.LibraryItem;
+import com.pulsar.util.Printer;
 
 public class LibraryService {
 
@@ -16,5 +20,15 @@ public class LibraryService {
 
     public void printCatalog() {
         catalog.print();
+    }
+
+    private void validate(LibraryItem libraryItem) {
+        if (libraryItem == null
+                || libraryItem.getTitle() == null
+                || libraryItem.getTitle().isBlank()
+                || libraryItem.getAuthor() == null
+                || libraryItem.getAuthor().isBlank()) {
+            throw new InvalidLibraryItemException("Невозможно создать объект с такими данными!");
+        }
     }
 }
