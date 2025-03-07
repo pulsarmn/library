@@ -5,6 +5,7 @@ import com.pulsar.model.LibraryItem;
 import com.pulsar.util.Printer;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Catalog {
@@ -32,7 +33,19 @@ public class Catalog {
         if (libraryItem == null) {
             throw new IllegalArgumentException("Добавляемый объект не должен быть пустым!");
         }
-        catalog.add(libraryItem);
+
+        if (catalog.contains(libraryItem)) {
+            catalog.stream()
+                    .filter(item -> item.getTitle().equalsIgnoreCase(libraryItem.getTitle()))
+                    .filter(item -> item.getAuthor().equalsIgnoreCase(libraryItem.getAuthor()))
+                    .peek(item -> {
+                        int totalCopies = item.getAvailableCopies() + libraryItem.getAvailableCopies();
+                        item.setAvailableCopies(totalCopies);
+                    })
+                    .findFirst();
+        }else {
+            catalog.add(libraryItem);
+        }
     }
 
     public LibraryItem take(String title) {
