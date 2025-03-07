@@ -26,4 +26,11 @@ public class Catalog {
             catalog.forEach(System.out::println);
         }
     }
+
+    public void add(LibraryItem libraryItem) {
+        if (libraryItem == null) {
+            throw new IllegalArgumentException("Добавляемый объект не должен быть пустым!");
+        }
+        catalog.add(libraryItem);
+    }
 }
