@@ -1,10 +1,12 @@
 package com.pulsar;
 
+import com.pulsar.exception.ItemNotFoundException;
 import com.pulsar.model.LibraryItem;
 import com.pulsar.util.Printer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Catalog {
 
@@ -32,5 +34,20 @@ public class Catalog {
             throw new IllegalArgumentException("Добавляемый объект не должен быть пустым!");
         }
         catalog.add(libraryItem);
+    }
+
+    public LibraryItem take(String title) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Заголовок не должен быть пустым");
+        }
+
+        return catalog.stream()
+                .filter(libraryItem -> libraryItem.getTitle().equalsIgnoreCase(title))
+                .findFirst()
+                .map(libraryItem -> {
+                    libraryItem.decrementCopies();
+                    return libraryItem;
+                })
+                .orElseThrow(() -> new ItemNotFoundException("Объект с именем %s не найден".formatted(title)));
     }
 }
