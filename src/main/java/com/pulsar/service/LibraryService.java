@@ -13,4 +13,8 @@ public class LibraryService {
     public LibraryService(Catalog catalog) {
         this.catalog = catalog;
     }
+
+    public void printCatalog() {
+        catalog.print();
+    }
 }
