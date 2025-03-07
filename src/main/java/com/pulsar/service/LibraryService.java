@@ -22,6 +22,12 @@ public class LibraryService {
         catalog.print();
     }
 
+    public LibraryItem createLibraryItem(String title, String author, int availableCopies) {
+        LibraryItem libraryItem = new Book(title, author, availableCopies);
+        validate(libraryItem);
+        return libraryItem;
+    }
+
     private void validate(LibraryItem libraryItem) {
         if (libraryItem == null
                 || libraryItem.getTitle() == null
