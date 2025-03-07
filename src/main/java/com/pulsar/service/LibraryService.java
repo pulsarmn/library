@@ -4,7 +4,6 @@ import com.pulsar.Catalog;
 import com.pulsar.exception.InvalidLibraryItemException;
 import com.pulsar.model.Book;
 import com.pulsar.model.LibraryItem;
-import com.pulsar.util.Printer;
 
 public class LibraryService {
 
@@ -26,6 +25,11 @@ public class LibraryService {
         LibraryItem libraryItem = new Book(title, author, availableCopies);
         validate(libraryItem);
         return libraryItem;
+    }
+
+    public void addLibraryItem(LibraryItem libraryItem) {
+        validate(libraryItem);
+        catalog.add(libraryItem);
     }
 
     private void validate(LibraryItem libraryItem) {
