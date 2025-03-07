@@ -6,7 +6,6 @@ import com.pulsar.util.Printer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Catalog {
 
@@ -23,7 +22,7 @@ public class Catalog {
     public void print() {
         if (catalog.isEmpty()) {
             Printer.error("Каталог пуст!");
-        }else {
+        } else {
             Printer.success("Каталог:");
             catalog.forEach(System.out::println);
         }
@@ -49,5 +48,19 @@ public class Catalog {
                     return libraryItem;
                 })
                 .orElseThrow(() -> new ItemNotFoundException("Объект с именем %s не найден".formatted(title)));
+    }
+
+    public void returnLibraryItem(LibraryItem item) {
+        if (item == null) {
+            throw new IllegalArgumentException("Возвращаемый элемент не должен быть пустым!");
+        }
+
+        if (catalog.contains(item)) {
+            catalog.stream()
+                    .peek(LibraryItem::incrementCopies)
+                    .findFirst();
+        } else {
+            Printer.error("Невозможно вернуть данный объект!");
+        }
     }
 }
