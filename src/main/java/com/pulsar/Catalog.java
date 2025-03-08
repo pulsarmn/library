@@ -22,9 +22,9 @@ public class Catalog {
 
     public void print() {
         if (catalog.isEmpty()) {
-            Printer.error("Каталог пуст!");
+            Printer.displayError("Каталог пуст!");
         } else {
-            Printer.success("Каталог:");
+            Printer.displaySuccess("Каталог:");
             catalog.forEach(System.out::println);
         }
     }

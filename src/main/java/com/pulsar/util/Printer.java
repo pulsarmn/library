@@ -22,24 +22,23 @@ public final class Printer {
     }
 
     public static void inputError() {
-        String message = "Некорректный ввод! Попробуйте ещё раз!";
-        error(message);
+        displayColoredMessage("Некорректный ввод! Попробуйте ещё раз!", ColorCode.BOLD_RED);
     }
 
-    public static void error(String message) {
-        System.out.println(ColorCode.BOLD_RED + message + ColorCode.RESET);
+    public static void displayError(String message) {
+        displayColoredMessage(message, ColorCode.BOLD_RED);
     }
 
-    public static void success(String message) {
-        System.out.println(ColorCode.BOLD_GREEN + message + ColorCode.RESET);
+    public static void displaySuccess(String message) {
+        displayColoredMessage(message, ColorCode.BOLD_GREEN);
     }
 
-    public static void print(String message) {
-        System.out.print(message);
+    public static void displayColoredMessage(String message, ColorCode color) {
+        OUTPUT.println(color + message + ColorCode.RESET);
     }
 
     public static void println(String message) {
-        System.out.println(message);
+        OUTPUT.println(message);
     }
 
     private enum ColorCode {

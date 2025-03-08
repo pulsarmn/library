@@ -57,7 +57,7 @@ public class Library {
         } catch (InputMismatchException e) {
             Printer.inputError();
         } catch (Exception e) {
-            Printer.error("Невозможно создать объект с такими данными!");
+            Printer.displayError("Невозможно создать объект с такими данными!");
         }
     }
 
@@ -82,7 +82,7 @@ public class Library {
             LibraryItem libraryItem = createSingleLibraryItem();
             return Optional.ofNullable(libraryService.takeLibraryItem(libraryItem));
         } catch (Exception e) {
-            Printer.error(e.getMessage());
+            Printer.displayError(e.getMessage());
             return Optional.empty();
         }
     }
@@ -92,7 +92,7 @@ public class Library {
             LibraryItem libraryItem = createSingleLibraryItem();
             libraryService.returnLibraryItem(libraryItem);
         } catch (InvalidLibraryItemException e) {
-            Printer.error(e.getMessage());
+            Printer.displayError(e.getMessage());
         }
     }
 
