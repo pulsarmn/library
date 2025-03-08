@@ -1,20 +1,20 @@
 package com.pulsar.util;
 
+import java.io.PrintStream;
+
 public final class Printer {
 
-    private static final String BOLD_RED = "\033[1;31m";
-    private static final String BOLD_GREEN = "\033[1;32m";
-    private static final String RESET = "\033[0m";
+    private static final PrintStream OUTPUT = System.out;
 
     private Printer() {
     }
 
-    public static void mainMenu() {
-        System.out.println("1. Посмотреть каталог");
-        System.out.println("2. Добавить объект");
-        System.out.println("3. Выдать объект");
-        System.out.println("4. Вернуть объект");
-        System.out.println("0. Выйти");
+    public static void displayMainMenu() {
+        OUTPUT.println("1. Посмотреть каталог");
+        OUTPUT.println("2. Добавить объект");
+        OUTPUT.println("3. Выдать объект");
+        OUTPUT.println("4. Вернуть объект");
+        OUTPUT.println("0. Выйти");
     }
 
     public static void inputRequest() {
@@ -22,23 +22,39 @@ public final class Printer {
     }
 
     public static void inputError() {
-        String message = "Некорректный ввод! Попробуйте ещё раз!";
-        error(message);
+        displayColoredMessage("Некорректный ввод! Попробуйте ещё раз!", ColorCode.BOLD_RED);
     }
 
-    public static void error(String message) {
-        System.out.println(BOLD_RED + message + RESET);
+    public static void displayError(String message) {
+        displayColoredMessage(message, ColorCode.BOLD_RED);
     }
 
-    public static void success(String message) {
-        System.out.println(BOLD_GREEN + message + RESET);
+    public static void displaySuccess(String message) {
+        displayColoredMessage(message, ColorCode.BOLD_GREEN);
     }
 
-    public static void print(String message) {
-        System.out.print(message);
+    public static void displayColoredMessage(String message, ColorCode color) {
+        OUTPUT.println(color + message + ColorCode.RESET);
     }
 
     public static void println(String message) {
-        System.out.println(message);
+        OUTPUT.println(message);
+    }
+
+    private enum ColorCode {
+        BOLD_RED("\033[1;31m"),
+        BOLD_GREEN("\033[1;32m"),
+        RESET("\033[0m");
+
+        private final String value;
+
+        ColorCode(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
     }
 }

@@ -1,78 +1,74 @@
 package com.pulsar;
 
-import com.pulsar.exception.InvalidLibraryItemException;
 import com.pulsar.exception.ItemNotFoundException;
+import com.pulsar.exception.NoAvailableCopiesException;
 import com.pulsar.model.LibraryItem;
 import com.pulsar.util.Printer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Consumer;
 
 public class Catalog {
 
-    private final List<LibraryItem> catalog;
+    private final ConcurrentMap<LibraryItemKey, LibraryItem> catalog;
 
     public Catalog() {
-        this(new ArrayList<>());
-    }
-
-    public Catalog(List<LibraryItem> catalog) {
-        this.catalog = catalog;
+        this.catalog = new ConcurrentHashMap<>();
     }
 
     public void print() {
         if (catalog.isEmpty()) {
-            Printer.error("Каталог пуст!");
-        } else {
-            Printer.success("Каталог:");
-            catalog.forEach(System.out::println);
+            Printer.displayError("Каталог пуст!");
+            return;
         }
+
+        Printer.displaySuccess("Каталог:");
+        catalog.values().stream()
+                .sorted(Comparator.comparing(LibraryItem::getTitle))
+                .map(Object::toString)
+                .forEach(Printer::println);
     }
 
-    public void add(LibraryItem libraryItem) {
-        if (libraryItem == null) {
-            throw new IllegalArgumentException("Добавляемый объект не должен быть пустым!");
-        }
+    public void add(LibraryItem item) {
+        Objects.requireNonNull(item);
+        LibraryItemKey key = new LibraryItemKey(item);
 
-        if (catalog.contains(libraryItem)) {
-            catalog.stream()
-                    .filter(item -> item.equals(libraryItem))
-                    .peek(item -> {
-                        int totalCopies = item.getAvailableCopies() + libraryItem.getAvailableCopies();
-                        item.setAvailableCopies(totalCopies);
-                    })
-                    .findFirst();
-        }else {
-            catalog.add(libraryItem);
-        }
+        catalog.compute(key, (k, value) -> {
+            if (value != null) {
+                value.increaseCopies(item.getAvailableCopies());
+                return value;
+            }
+            return item;
+        });
     }
 
-    public LibraryItem take(LibraryItem item) {
+    public LibraryItem take(LibraryItemKey key) {
+        return performItemOperation(key, item -> {
+            if (item.getAvailableCopies() == 0) {
+                throw new NoAvailableCopiesException("Данного объекта нет в наличии!");
+            }
+            item.decrementCopies();
+        });
+    }
+
+    public void returnLibraryItem(LibraryItemKey key) {
+        performItemOperation(key, LibraryItem::incrementCopies);
+    }
+
+    private LibraryItem performItemOperation(LibraryItemKey key, Consumer<LibraryItem> operation) {
+        LibraryItem item = catalog.get(key);
+
         if (item == null) {
-            throw new IllegalArgumentException("Объект не должен быть пустым");
+            throw new ItemNotFoundException("Объект с именем %s и автором %s не найден"
+                    .formatted(key.getTitle(), key.getAuthor()));
         }
 
-        return catalog.stream()
-                .filter(libraryItem -> libraryItem.equals(item))
-                .findFirst()
-                .map(libraryItem -> {
-                    libraryItem.decrementCopies();
-                    return libraryItem;
-                })
-                .orElseThrow(() -> new ItemNotFoundException("Объект с именем %s и автором %s не найден"
-                        .formatted(item.getTitle(), item.getAuthor())
-                ));
-    }
-
-    public void returnLibraryItem(LibraryItem item) {
-        if (item == null) {
-            throw new IllegalArgumentException("Возвращаемый элемент не должен быть пустым!");
+        synchronized (item) {
+            operation.accept(item);
         }
-
-        catalog.stream()
-                .filter(libraryItem -> libraryItem.equals(item))
-                .peek(LibraryItem::incrementCopies)
-                .findFirst()
-                .orElseThrow(() -> new InvalidLibraryItemException("Невозможно вернуть данный объект!"));
+        return item;
     }
 }
