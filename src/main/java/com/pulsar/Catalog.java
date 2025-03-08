@@ -1,11 +1,11 @@
 package com.pulsar;
 
+import com.pulsar.exception.InvalidLibraryItemException;
 import com.pulsar.exception.ItemNotFoundException;
 import com.pulsar.model.LibraryItem;
 import com.pulsar.util.Printer;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class Catalog {
@@ -36,8 +36,7 @@ public class Catalog {
 
         if (catalog.contains(libraryItem)) {
             catalog.stream()
-                    .filter(item -> item.getTitle().equalsIgnoreCase(libraryItem.getTitle()))
-                    .filter(item -> item.getAuthor().equalsIgnoreCase(libraryItem.getAuthor()))
+                    .filter(item -> item.equals(libraryItem))
                     .peek(item -> {
                         int totalCopies = item.getAvailableCopies() + libraryItem.getAvailableCopies();
                         item.setAvailableCopies(totalCopies);
@@ -68,12 +67,10 @@ public class Catalog {
             throw new IllegalArgumentException("Возвращаемый элемент не должен быть пустым!");
         }
 
-        if (catalog.contains(item)) {
-            catalog.stream()
-                    .peek(LibraryItem::incrementCopies)
-                    .findFirst();
-        } else {
-            Printer.error("Невозможно вернуть данный объект!");
-        }
+        catalog.stream()
+                .filter(libraryItem -> libraryItem.equals(item))
+                .peek(LibraryItem::incrementCopies)
+                .findFirst()
+                .orElseThrow(() -> new InvalidLibraryItemException("Невозможно вернуть данный объект!"));
     }
 }
