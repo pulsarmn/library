@@ -31,7 +31,7 @@ public class Library {
 
     public void open() {
         while (true) {
-            Printer.mainMenu();
+            Printer.displayMainMenu();
             Printer.inputRequest();
 
             String menuItem = terminal.nextLine();

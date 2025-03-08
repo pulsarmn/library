@@ -1,16 +1,20 @@
 package com.pulsar.util;
 
+import java.io.PrintStream;
+
 public final class Printer {
+
+    private static final PrintStream OUTPUT = System.out;
 
     private Printer() {
     }
 
-    public static void mainMenu() {
-        System.out.println("1. Посмотреть каталог");
-        System.out.println("2. Добавить объект");
-        System.out.println("3. Выдать объект");
-        System.out.println("4. Вернуть объект");
-        System.out.println("0. Выйти");
+    public static void displayMainMenu() {
+        OUTPUT.println("1. Посмотреть каталог");
+        OUTPUT.println("2. Добавить объект");
+        OUTPUT.println("3. Выдать объект");
+        OUTPUT.println("4. Вернуть объект");
+        OUTPUT.println("0. Выйти");
     }
 
     public static void inputRequest() {
