@@ -62,7 +62,8 @@ public class Catalog {
         LibraryItem item = catalog.get(key);
 
         if (item == null) {
-            throw new ItemNotFoundException("Объект с именем %s и автором %s не найден");
+            throw new ItemNotFoundException("Объект с именем %s и автором %s не найден"
+                    .formatted(key.getTitle(), key.getAuthor()));
         }
 
         synchronized (item) {
