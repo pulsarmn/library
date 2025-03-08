@@ -10,6 +10,10 @@ public abstract class LibraryItem {
     protected final String author;
     protected int availableCopies;
 
+    public LibraryItem(String title, String author) {
+        this(title, author, 1);
+    }
+
     public LibraryItem(String title, String author, int availableCopies) {
         if (availableCopies < 1) {
             throw new IllegalArgumentException("Кол-во должно быть больше 0: %s".formatted(availableCopies));
@@ -50,7 +54,7 @@ public abstract class LibraryItem {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         LibraryItem that = (LibraryItem) o;
-        return Objects.equals(title, that.title) && Objects.equals(author, that.author);
+        return title.equalsIgnoreCase(that.title) && author.equalsIgnoreCase(that.author);
     }
 
     @Override
