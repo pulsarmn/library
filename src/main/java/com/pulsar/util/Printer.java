@@ -2,10 +2,6 @@ package com.pulsar.util;
 
 public final class Printer {
 
-    private static final String BOLD_RED = "\033[1;31m";
-    private static final String BOLD_GREEN = "\033[1;32m";
-    private static final String RESET = "\033[0m";
-
     private Printer() {
     }
 
@@ -27,11 +23,11 @@ public final class Printer {
     }
 
     public static void error(String message) {
-        System.out.println(BOLD_RED + message + RESET);
+        System.out.println(ColorCode.BOLD_RED + message + ColorCode.RESET);
     }
 
     public static void success(String message) {
-        System.out.println(BOLD_GREEN + message + RESET);
+        System.out.println(ColorCode.BOLD_GREEN + message + ColorCode.RESET);
     }
 
     public static void print(String message) {
@@ -40,5 +36,22 @@ public final class Printer {
 
     public static void println(String message) {
         System.out.println(message);
+    }
+
+    private enum ColorCode {
+        BOLD_RED("\033[1;31m"),
+        BOLD_GREEN("\033[1;32m"),
+        RESET("\033[0m");
+
+        private final String value;
+
+        ColorCode(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
     }
 }
