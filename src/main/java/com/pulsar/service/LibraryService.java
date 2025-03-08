@@ -41,4 +41,8 @@ public class LibraryService {
             throw new InvalidLibraryItemException("Невозможно создать объект с такими данными!");
         }
     }
+
+    public LibraryItem takeLibraryItem(LibraryItem libraryItem) {
+        return catalog.take(libraryItem);
+    }
 }
