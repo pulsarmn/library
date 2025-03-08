@@ -47,19 +47,21 @@ public class Catalog {
         }
     }
 
-    public LibraryItem take(String title) {
-        if (title == null || title.isBlank()) {
-            throw new IllegalArgumentException("Заголовок не должен быть пустым");
+    public LibraryItem take(LibraryItem item) {
+        if (item == null) {
+            throw new IllegalArgumentException("Объект не должен быть пустым");
         }
 
         return catalog.stream()
-                .filter(libraryItem -> libraryItem.getTitle().equalsIgnoreCase(title))
+                .filter(libraryItem -> libraryItem.equals(item))
                 .findFirst()
                 .map(libraryItem -> {
                     libraryItem.decrementCopies();
                     return libraryItem;
                 })
-                .orElseThrow(() -> new ItemNotFoundException("Объект с именем %s не найден".formatted(title)));
+                .orElseThrow(() -> new ItemNotFoundException("Объект с именем %s и автором %s не найден"
+                        .formatted(item.getTitle(), item.getAuthor())
+                ));
     }
 
     public void returnLibraryItem(LibraryItem item) {
