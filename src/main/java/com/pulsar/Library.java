@@ -1,6 +1,7 @@
 package com.pulsar;
 
 import com.pulsar.service.LibraryService;
+import com.pulsar.util.Printer;
 
 import java.util.Scanner;
 
@@ -22,5 +23,28 @@ public class Library {
     public Library(LibraryService libraryService) {
         this.libraryService = libraryService;
         this.terminal = new Scanner(System.in);
+    }
+
+    public void open() {
+        while (true) {
+            Printer.mainMenu();
+            Printer.inputRequest();
+
+            String menuItem = terminal.nextLine();
+
+            if (menuItem.equals(PRINT_CATALOG)) {
+                libraryService.printCatalog();
+            }else if (menuItem.equals(ADD_ITEM)) {
+
+            }else if (menuItem.equals(TAKE_ITEM)) {
+
+            }else if (menuItem.equals(RETURN_ITEM)) {
+
+            }else if (menuItem.equals(EXIT)) {
+                break;
+            }else {
+                Printer.inputError();
+            }
+        }
     }
 }
