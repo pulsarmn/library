@@ -8,6 +8,7 @@ public class Book extends LibraryItem {
 
     @Override
     public String toString() {
-        return "Название: %s | Автор: %s | В наличии: %s".formatted(title, author, availableCopies);
+        return "Название: %s | Автор: %s | В наличии: %s"
+                .formatted(getTitle(), getAuthor(), getAvailableCopies());
     }
 }
