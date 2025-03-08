@@ -1,8 +1,10 @@
 package com.pulsar;
 
+import com.pulsar.model.LibraryItem;
 import com.pulsar.service.LibraryService;
 import com.pulsar.util.Printer;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Library {
@@ -35,7 +37,8 @@ public class Library {
             if (menuItem.equals(PRINT_CATALOG)) {
                 libraryService.printCatalog();
             }else if (menuItem.equals(ADD_ITEM)) {
-
+                addItem();
+                terminal.nextLine();
             }else if (menuItem.equals(TAKE_ITEM)) {
 
             }else if (menuItem.equals(RETURN_ITEM)) {
@@ -46,5 +49,32 @@ public class Library {
                 Printer.inputError();
             }
         }
+    }
+
+    private void addItem() {
+        try {
+            LibraryItem libraryItem = createLibraryItem();
+            libraryService.addLibraryItem(libraryItem);
+        }catch (InputMismatchException e) {
+            Printer.inputError();
+        }catch (Exception e) {
+            Printer.error("Невозможно создать объект с такими данными!");
+        }
+    }
+
+    private LibraryItem createLibraryItem() {
+        Printer.println("Введите название:");
+        Printer.inputRequest();
+        String title = terminal.nextLine();
+
+        Printer.println("Введите автора:");
+        Printer.inputRequest();
+        String author = terminal.nextLine();
+
+        Printer.println("Введите кол-во копий:");
+        Printer.inputRequest();
+        int copies = terminal.nextInt();
+
+        return libraryService.createLibraryItem(title, author, copies);
     }
 }
