@@ -1,18 +1,15 @@
 package com.pulsar;
 
-import com.pulsar.exception.InvalidLibraryItemException;
-import com.pulsar.model.LibraryItem;
 import com.pulsar.service.LibraryService;
 import com.pulsar.util.Printer;
 
-import java.util.InputMismatchException;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Library {
 
     private final Scanner terminal;
     private final LibraryService libraryService;
+    private boolean isRunning = false;
 
     private static final String PRINT_CATALOG = "1";
     private static final String ADD_ITEM = "2";
@@ -29,39 +26,28 @@ public class Library {
         this.terminal = new Scanner(System.in);
     }
 
-    public void open() {
-        while (true) {
+    public void start() {
+        isRunning = true;
+
+        while (isRunning) {
             Printer.displayMainMenu();
             Printer.inputRequest();
+            processCommand(terminal.nextLine());
+        }
+    }
 
-            String menuItem = terminal.nextLine();
-
-            switch (menuItem) {
-                case PRINT_CATALOG -> libraryService.printCatalog();
-                case ADD_ITEM -> {
-                    addItem();
-                    terminal.nextLine();
-                }
-                case TAKE_ITEM -> takeItem();
-                case RETURN_ITEM -> returnItem();
-                case EXIT -> System.exit(0);
-                default -> Printer.inputError();
-            }
+    private void processCommand(String command) {
+        switch (command) {
+            case PRINT_CATALOG -> libraryService.printCatalog();
+            case ADD_ITEM -> addItem();
+            case TAKE_ITEM -> takeItem();
+            case RETURN_ITEM -> returnItem();
+            case EXIT -> shutdown();
+            default -> Printer.inputError();
         }
     }
 
     private void addItem() {
-        try {
-            LibraryItem libraryItem = createLibraryItem();
-            libraryService.addLibraryItem(libraryItem);
-        } catch (InputMismatchException e) {
-            Printer.inputError();
-        } catch (Exception e) {
-            Printer.displayError("Невозможно создать объект с такими данными!");
-        }
-    }
-
-    private LibraryItem createLibraryItem() {
         Printer.println("Введите название:");
         Printer.inputRequest();
         String title = terminal.nextLine().trim();
@@ -74,29 +60,15 @@ public class Library {
         Printer.inputRequest();
         int copies = terminal.nextInt();
 
-        return libraryService.createLibraryItem(title, author, copies);
-    }
-
-    private Optional<LibraryItem> takeItem() {
         try {
-            LibraryItem libraryItem = createSingleLibraryItem();
-            return Optional.ofNullable(libraryService.takeLibraryItem(libraryItem));
+            libraryService.registerNewItem(title, author, copies);
         } catch (Exception e) {
             Printer.displayError(e.getMessage());
-            return Optional.empty();
+            terminal.nextLine();
         }
     }
 
-    private void returnItem() {
-        try {
-            LibraryItem libraryItem = createSingleLibraryItem();
-            libraryService.returnLibraryItem(libraryItem);
-        } catch (InvalidLibraryItemException e) {
-            Printer.displayError(e.getMessage());
-        }
-    }
-
-    private LibraryItem createSingleLibraryItem() {
+    private void takeItem() {
         Printer.println("Введите название:");
         Printer.inputRequest();
         String title = terminal.nextLine().trim();
@@ -105,6 +77,31 @@ public class Library {
         Printer.inputRequest();
         String author = terminal.nextLine().trim();
 
-        return libraryService.createLibraryItem(title, author, 1);
+        try {
+            libraryService.takeItem(title, author);
+        } catch (Exception e) {
+            Printer.displayError(e.getMessage());
+        }
+    }
+
+    private void returnItem() {
+        Printer.println("Введите название:");
+        Printer.inputRequest();
+        String title = terminal.nextLine().trim();
+
+        Printer.println("Введите автора:");
+        Printer.inputRequest();
+        String author = terminal.nextLine().trim();
+
+        try {
+            libraryService.returnItem(title, author);
+        } catch (Exception e) {
+            Printer.displayError(e.getMessage());
+        }
+    }
+
+    private void shutdown() {
+        isRunning = false;
+        terminal.close();
     }
 }
