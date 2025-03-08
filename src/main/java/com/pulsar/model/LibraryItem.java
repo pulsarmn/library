@@ -10,6 +10,10 @@ public abstract class LibraryItem {
     protected final String author;
     protected int availableCopies;
 
+    public LibraryItem(String title, String author) {
+        this(title, author, 1);
+    }
+
     public LibraryItem(String title, String author, int availableCopies) {
         if (availableCopies < 1) {
             throw new IllegalArgumentException("Кол-во должно быть больше 0: %s".formatted(availableCopies));
