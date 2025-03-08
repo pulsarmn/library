@@ -1,10 +1,12 @@
 package com.pulsar;
 
+import com.pulsar.exception.ItemNotFoundException;
 import com.pulsar.model.LibraryItem;
 import com.pulsar.service.LibraryService;
 import com.pulsar.util.Printer;
 
 import java.util.InputMismatchException;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Library {
@@ -40,7 +42,7 @@ public class Library {
                 addItem();
                 terminal.nextLine();
             }else if (menuItem.equals(TAKE_ITEM)) {
-
+                takeItem();
             }else if (menuItem.equals(RETURN_ITEM)) {
 
             }else if (menuItem.equals(EXIT)) {
@@ -76,5 +78,27 @@ public class Library {
         int copies = terminal.nextInt();
 
         return libraryService.createLibraryItem(title, author, copies);
+    }
+
+    private Optional<LibraryItem> takeItem() {
+        try {
+            LibraryItem libraryItem = createSingleLibraryItem();
+            return Optional.ofNullable(libraryService.takeLibraryItem(libraryItem));
+        }catch (ItemNotFoundException e) {
+            Printer.error(e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    private LibraryItem createSingleLibraryItem() {
+        Printer.println("Введите название:");
+        Printer.inputRequest();
+        String title = terminal.nextLine();
+
+        Printer.println("Введите автора:");
+        Printer.inputRequest();
+        String author = terminal.nextLine();
+
+        return libraryService.createLibraryItem(title, author, 1);
     }
 }
