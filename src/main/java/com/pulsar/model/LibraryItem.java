@@ -50,7 +50,7 @@ public abstract class LibraryItem {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         LibraryItem that = (LibraryItem) o;
-        return Objects.equals(title, that.title) && Objects.equals(author, that.author);
+        return title.equalsIgnoreCase(that.title) && author.equalsIgnoreCase(that.author);
     }
 
     @Override
