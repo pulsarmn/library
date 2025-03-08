@@ -45,4 +45,8 @@ public class LibraryService {
     public LibraryItem takeLibraryItem(LibraryItem libraryItem) {
         return catalog.take(libraryItem);
     }
+
+    public void returnLibraryItem(LibraryItem libraryItem) {
+        catalog.returnLibraryItem(libraryItem);
+    }
 }
