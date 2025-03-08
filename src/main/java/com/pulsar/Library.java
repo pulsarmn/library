@@ -1,5 +1,6 @@
 package com.pulsar;
 
+import com.pulsar.exception.InvalidLibraryItemException;
 import com.pulsar.exception.ItemNotFoundException;
 import com.pulsar.model.LibraryItem;
 import com.pulsar.service.LibraryService;
@@ -44,7 +45,7 @@ public class Library {
             }else if (menuItem.equals(TAKE_ITEM)) {
                 takeItem();
             }else if (menuItem.equals(RETURN_ITEM)) {
-
+                returnItem();
             }else if (menuItem.equals(EXIT)) {
                 break;
             }else {
@@ -87,6 +88,15 @@ public class Library {
         }catch (ItemNotFoundException e) {
             Printer.error(e.getMessage());
             return Optional.empty();
+        }
+    }
+
+    private void returnItem() {
+        try {
+            LibraryItem libraryItem = createSingleLibraryItem();
+            libraryService.returnLibraryItem(libraryItem);
+        }catch (InvalidLibraryItemException e) {
+            Printer.error(e.getMessage());
         }
     }
 
