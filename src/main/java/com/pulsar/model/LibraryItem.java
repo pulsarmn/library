@@ -6,28 +6,37 @@ import java.util.Objects;
 
 public abstract class LibraryItem {
 
-    protected final String title;
-    protected final String author;
-    protected int availableCopies;
-
-    public LibraryItem(String title, String author) {
-        this(title, author, 1);
-    }
+    private final String title;
+    private final String author;
+    private volatile int availableCopies;
 
     public LibraryItem(String title, String author, int availableCopies) {
-        if (availableCopies < 1) {
-            throw new IllegalArgumentException("Кол-во должно быть больше 0: %s".formatted(availableCopies));
-        }
+        validate(title, author, availableCopies);
         this.title = title;
         this.author = author;
         this.availableCopies = availableCopies;
     }
 
-    public void incrementCopies() {
+    private void validate(String title, String author, int copies) {
+        Objects.requireNonNull(title, () -> "Название не может быть пустым");
+        Objects.requireNonNull(author, () -> "Автор не может быть пустым");
+        if (copies < 1) {
+            throw new IllegalArgumentException("Кол-во копий должно быть больше 0: %s".formatted(copies));
+        }
+    }
+
+    public synchronized void incrementCopies() {
         availableCopies++;
     }
 
-    public void decrementCopies() {
+    public synchronized void increaseCopies(int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Кол-во должно быть больше 0: %s".formatted(amount));
+        }
+        availableCopies += amount;
+    }
+
+    public synchronized void decrementCopies() {
         if (availableCopies == 0) {
             throw new NoAvailableCopiesException("%s нет в наличии!".formatted(title));
         }
@@ -46,19 +55,18 @@ public abstract class LibraryItem {
         return availableCopies;
     }
 
-    public void setAvailableCopies(int availableCopies) {
-        this.availableCopies = availableCopies;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         LibraryItem that = (LibraryItem) o;
-        return title.equalsIgnoreCase(that.title) && author.equalsIgnoreCase(that.author);
+        return title.equals(that.title) && author.equals(that.author);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(title, author);
     }
+
+    @Override
+    public abstract String toString();
 }
