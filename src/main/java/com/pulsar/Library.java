@@ -17,6 +17,10 @@ public class Library {
     private static final String RETURN_ITEM = "4";
     private static final String EXIT = "0";
 
+    private static final String INPUT_NAME = "Введите название:";
+    private static final String INPUT_AUTHOR = "Введите автора:";
+    private static final String INPUT_NUMBER_OF_COPIES = "Введите кол-во копий:";
+
     public Library() {
         this(new LibraryService());
     }
@@ -48,15 +52,15 @@ public class Library {
     }
 
     private void addItem() {
-        Printer.println("Введите название:");
+        Printer.println(INPUT_NAME);
         Printer.inputRequest();
         String title = terminal.nextLine().trim();
 
-        Printer.println("Введите автора:");
+        Printer.println(INPUT_AUTHOR);
         Printer.inputRequest();
         String author = terminal.nextLine().trim();
 
-        Printer.println("Введите кол-во копий:");
+        Printer.println(INPUT_NUMBER_OF_COPIES);
         Printer.inputRequest();
         int copies = terminal.nextInt();
 
@@ -69,11 +73,11 @@ public class Library {
     }
 
     private void takeItem() {
-        Printer.println("Введите название:");
+        Printer.println(INPUT_NAME);
         Printer.inputRequest();
         String title = terminal.nextLine().trim();
 
-        Printer.println("Введите автора:");
+        Printer.println(INPUT_AUTHOR);
         Printer.inputRequest();
         String author = terminal.nextLine().trim();
 
@@ -85,11 +89,11 @@ public class Library {
     }
 
     private void returnItem() {
-        Printer.println("Введите название:");
+        Printer.println(INPUT_NAME);
         Printer.inputRequest();
         String title = terminal.nextLine().trim();
 
-        Printer.println("Введите автора:");
+        Printer.println(INPUT_AUTHOR);
         Printer.inputRequest();
         String author = terminal.nextLine().trim();
 
