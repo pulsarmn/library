@@ -56,17 +56,5 @@ public abstract class LibraryItem {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        LibraryItem that = (LibraryItem) o;
-        return title.equals(that.title) && author.equals(that.author);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(title, author);
-    }
-
-    @Override
     public abstract String toString();
 }
