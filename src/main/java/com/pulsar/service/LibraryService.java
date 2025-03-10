@@ -1,24 +1,21 @@
 package com.pulsar.service;
 
 import com.pulsar.Catalog;
-import com.pulsar.DefaultItemFactory;
-import com.pulsar.ItemFactory;
 import com.pulsar.LibraryItemKey;
 import com.pulsar.exception.InvalidLibraryItemException;
+import com.pulsar.model.Book;
 import com.pulsar.model.LibraryItem;
 
 public class LibraryService {
 
     private final Catalog catalog;
-    private final ItemFactory itemFactory;
 
     public LibraryService() {
-        this(new Catalog(), new DefaultItemFactory());
+        this(new Catalog());
     }
 
-    public LibraryService(Catalog catalog, ItemFactory itemFactory) {
+    public LibraryService(Catalog catalog) {
         this.catalog = catalog;
-        this.itemFactory = itemFactory;
     }
 
     public void printCatalog() {
@@ -26,7 +23,7 @@ public class LibraryService {
     }
 
     public LibraryItem registerNewItem(String title, String author, int copies) {
-        LibraryItem item = itemFactory.createBook(title, author, copies);
+        LibraryItem item = new Book(title, author, copies);
         validate(item);
         catalog.add(item);
         return item;

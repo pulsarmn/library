@@ -10,7 +10,7 @@ public abstract class LibraryItem {
     private final String author;
     private volatile int availableCopies;
 
-    public LibraryItem(String title, String author, int availableCopies) {
+    protected LibraryItem(String title, String author, int availableCopies) {
         validate(title, author, availableCopies);
         this.title = title;
         this.author = author;
@@ -53,18 +53,6 @@ public abstract class LibraryItem {
 
     public int getAvailableCopies() {
         return availableCopies;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        LibraryItem that = (LibraryItem) o;
-        return title.equals(that.title) && author.equals(that.author);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(title, author);
     }
 
     @Override
