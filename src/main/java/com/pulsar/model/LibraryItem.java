@@ -10,7 +10,7 @@ public abstract class LibraryItem {
     private final String author;
     private volatile int availableCopies;
 
-    public LibraryItem(String title, String author, int availableCopies) {
+    protected LibraryItem(String title, String author, int availableCopies) {
         validate(title, author, availableCopies);
         this.title = title;
         this.author = author;
