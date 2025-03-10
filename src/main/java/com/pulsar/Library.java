@@ -66,10 +66,11 @@ public class Library {
 
         try {
             libraryService.registerNewItem(title, author, copies);
+            Printer.displaySuccess("Книга успешно добавлена!");
         } catch (Exception e) {
             Printer.displayError(e.getMessage());
-            terminal.nextLine();
         }
+        terminal.nextLine();
     }
 
     private void takeItem() {
@@ -83,6 +84,7 @@ public class Library {
 
         try {
             libraryService.takeItem(title, author);
+            Printer.displaySuccess("Книга успешно взята!");
         } catch (Exception e) {
             Printer.displayError(e.getMessage());
         }
@@ -99,6 +101,7 @@ public class Library {
 
         try {
             libraryService.returnItem(title, author);
+            Printer.displaySuccess("Книга успешно возвращена!");
         } catch (Exception e) {
             Printer.displayError(e.getMessage());
         }
