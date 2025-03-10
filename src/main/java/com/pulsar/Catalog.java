@@ -6,17 +6,17 @@ import com.pulsar.model.LibraryItem;
 import com.pulsar.util.Printer;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
 
 public class Catalog {
 
-    private final ConcurrentMap<LibraryItemKey, LibraryItem> catalog;
+    private final Map<LibraryItemKey, LibraryItem> catalog;
 
     public Catalog() {
-        this.catalog = new ConcurrentHashMap<>();
+        this.catalog = new HashMap<>();
     }
 
     public void print() {
